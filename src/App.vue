@@ -1,32 +1,66 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+    <div class="container">
+    <header class="header">
+      <nav>
+        <router-link class="link" to="/">Task List</router-link>
+        <router-link class="link" to="/create">Task Form</router-link>
+      </nav>
+    </header>
+  </div>
+    <router-view></router-view>
   </div>
 </template>
 
+<script>
+import TaskList from "@/components/TaskList";
+import TaskForm from "@/components/TaskForm";
+export default {
+  name: 'App',
+  components: {TaskList, TaskForm},
+  mounted() {
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+      this.$store.commit('setTasks', JSON.parse(savedTasks));
+    }
+
+    window.addEventListener('beforeunload', this.saveTasksToLocalStorage);
+  },
+  beforeDestroy() {
+    this.saveTasksToLocalStorage();
+    window.removeEventListener('beforeunload', this.saveTasksToLocalStorage);
+  },
+  methods: {
+    saveTasksToLocalStorage() {
+      localStorage.setItem('tasks', JSON.stringify(this.$store.state.tasks));
+    }
+  }
+};
+</script>
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+*{
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
 }
-
-nav {
-  padding: 30px;
+.header{
+  background: mediumseagreen;
+  display: flex;
+  padding: 10px;
 }
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.container {
+  max-width: 100%;
+  margin: 0 auto;
 }
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.link{
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 20px;
+  transition: .2s;
+}
+.link:hover{
+  color: #d2cdcd;
 }
 </style>

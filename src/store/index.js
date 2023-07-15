@@ -1,17 +1,25 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
-export default new Vuex.Store({
-  state: {
-  },
-  getters: {
-  },
-  mutations: {
-  },
-  actions: {
-  },
-  modules: {
-  }
-})
+const store = new Vuex.Store({
+    state: {
+        tasks: []
+    },
+    mutations: {
+        addTask(state, task) {
+            state.tasks.push(task);
+        },
+        updateTask(state, { index, task }) {
+            Vue.set(state.tasks, index, task);
+        },
+        deleteTask(state, index) {
+            state.tasks.splice(index, 1);
+        }
+    }
+});
+
+export default store;
+
+
